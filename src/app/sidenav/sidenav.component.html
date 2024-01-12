@@ -1,0 +1,73 @@
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+  <div class="logo-container">
+    <button class="logo" (click)="toggleCollapse()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="25"
+        height="25"
+        viewBox="0 0 45 45"
+      >
+        <path
+          d="M 3 9 A 1.0001 1.0001 0 1 0 3 11 L 47 11 A 1.0001 1.0001 0 1 0 47 9 L 3 9 z M 3 24 A 1.0001 1.0001 0 1 0 3 26 L 47 26 A 1.0001 1.0001 0 1 0 47 24 L 3 24 z M 3 39 A 1.0001 1.0001 0 1 0 3 41 L 47 41 A 1.0001 1.0001 0 1 0 47 39 L 3 39 z"
+        ></path>
+      </svg>
+    </button>
+    <div class="logo-text" @fadeInOut *ngIf="collapsed">TRST01</div>
+    <button
+      class="btn-close"
+      @rotate
+      *ngIf="collapsed"
+      (click)="closeSidenav()"
+    >
+      <i class="fal fa-times close-icon"></i>
+    </button>
+  </div>
+  <div class="scrollwrap scrollwrap_delayed">
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" *ngFor="let data of navData">
+        <a
+          class="sidenav-nav-link"
+          (click)="handleClick(data)"
+          *ngIf="data.items && data.items.length > 0"
+          [ngClass]="getActiveClass(data)"
+        >
+          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">
+            {{ data.label }}
+          </span>
+          <i
+            *ngIf="data.items && collapsed"
+            class="menu-collapse-icon"
+            [ngClass]="
+              !data.expanded ? 'fal fa-angle-right' : 'fal fa-angle-down'
+            "
+          ></i>
+        </a>
+
+        <a
+          class="sidenav-nav-link"
+          *ngIf="!data.items || (data.items && data.items.length === 0)"
+          [routerLink]="[data.routeLink]"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="shrinkItems(data)"
+        >
+          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">
+            {{ data.label }}
+          </span>
+        </a>
+        <div *ngIf="collapsed && data.items && data.items.length > 0">
+          <app-sublevel-menu
+            [data]="data"
+            [collapsed]="collapsed"
+            [multiple]="multiple"
+            [expanded]="data.expanded"
+          ></app-sublevel-menu>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
